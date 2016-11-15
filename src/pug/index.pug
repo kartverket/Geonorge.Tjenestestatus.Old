@@ -1,0 +1,13 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    title Tjenestestatus - Geonorge
+  body
+    header
+      nav.navbar.navbar-default
+        div.container
+          div.navbar-header
+            a.navbar-brand(href="http://kartverket.no/") Kartverket
+    main#statusmonitor
+    script(type="text/javascript") ReactDOM.render( React.createElement(StatusMonitor), document.getElementById('statusmonitor') );
