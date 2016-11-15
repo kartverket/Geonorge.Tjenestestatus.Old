@@ -31,7 +31,22 @@ gulp.task('vendorJs:build', function () {
   .pipe(gulp.dest('./build/js/'));
 });
 
-gulp.task('default', ['pug:build', 'vendorJs:build', 'jsx:build'], function () {
+gulp.task('css:build', function () {
+  return gulp.src('./src/css/*.css')
+  .pipe(concat('statusmonitor.css'))
+  .pipe(gulp.dest('./build/css/'));
+});
+
+gulp.task('vendorCss:build', function () {
+  return gulp.src([
+    './bower_components/bootstrap/dist/css/bootstrap.css'
+  ])
+  .pipe(concat('vendor.css'))
+  .pipe(gulp.dest('./build/css/'));
+});
+
+gulp.task('default', ['pug:build', 'vendorCss:build', 'css:build', 'vendorJs:build', 'jsx:build'], function () {
   gulp.watch('./src/pug/**/*.pug', ['pug:build']);
+  gulp.watch('./src/css/**/*.css', ['css:build']);
   gulp.watch('./src/jsx/**/*.jsx', ['jsx:build']);
 });

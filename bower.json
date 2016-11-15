@@ -9,6 +9,7 @@
   "homepage": "",
   "private": true,
   "devDependencies": {
-    "react": "^15.3.2"
+    "react": "^15.3.2",
+    "bootstrap": "^3.3.7"
   }
 }
