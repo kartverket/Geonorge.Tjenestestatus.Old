@@ -1,0 +1,22 @@
+{
+  "name": "geonorge.tjenestestatus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartverket/Geonorge.Tjenestestatus.git"
+  },
+  "author": "Håvard Vidme <havard.vidme@kartverket.no>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kartverket/Geonorge.Tjenestestatus/issues"
+  },
+  "homepage": "https://github.com/kartverket/Geonorge.Tjenestestatus#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}

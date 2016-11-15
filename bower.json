@@ -1,0 +1,11 @@
+{
+  "name": "geonorge.tjenestestatus",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Håvard Vidme <havard.vidme@kartverket.no>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true
+}
