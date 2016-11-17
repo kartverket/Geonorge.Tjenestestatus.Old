@@ -101,33 +101,70 @@ var ServiceDetail = React.createClass({
             </a>
           </div>
           <div className="col-sm-8">
-            <ul className="list-group">
-              <li className="list-group-item">
-                <span className="badge">14</span>
-                <a className="text-success" href="#">
-                  <span className="glyphicon glyphicon-ok-sign" />
-                  {' '}
-                  <strong className="display-block">Får respons fra GetCapabilities</strong>
-                  {' '}
-                  <span className="glyphicon glyphicon-new-window" />
-                </a>
-                <br />
-                <small className="display-block">Testkallet fikk respons fra GetCapabilities-kall mot adressen</small>
-              </li>
-              <li className="list-group-item">
-                <span className="badge">no</span>
-                <a className="text-danger" href="#">
-                  <span className="glyphicon glyphicon-exclamation-sign" />
-                  {' '}
-                  <strong className="display-block">Oppgir nødvendig lisensinformasjon</strong>
-                </a>
-                <br />
-                <small className="display-block">Tjenesten oppgir både Attribution og AccessConstraints</small>
-              </li>
-            </ul>
+            <table className="table">
+              <colgroup>
+                <col width="7%" />
+                <col width="70%" />
+                <col width="16%" />
+                <col width="7%" />
+              </colgroup>
+              <tbody>
+                <StatusItem params={this.state.connect}>
+                  <h5>Får respons fra GetCapabilities</h5>
+                  <p>Testkallet fikk respons fra GetCapabilities-kall mot adressen</p>
+                </StatusItem>
+                <StatusItem params={this.state.email}>
+                  <h5>Har utfylt kontaktepostadresse</h5>
+                  <p>GetCapabilities responsen inneholder en epostadresse til kontaktperson hos tjenesteansvarlig</p>
+                </StatusItem>
+                <StatusItem params={this.state.cors}>
+                  <h5>CORS parametre er satt korrekt</h5>
+                  <p>HTTP responsen for GetCapabilities-kallet inneholder korrekte  CORS parametre i feltet Access-Control-Allow-Origin</p>
+                </StatusItem>
+                <StatusItem params={this.state.epsgSupported}>
+                  <h5>Støtter EPSG:32633 eller 25833</h5>
+                  <p>GetCapabilities oppgir at tjenesten støtter EUREF89 UTM sone 33 eller ETRS89 UTM sone 33</p>
+                </StatusItem>
+                <StatusItem params={this.state.hasGFI}>
+                  <h5>Støtter egenskapsspørringer</h5>
+                  <p>GetCapabilities responsen oppgir at tjenesten støtter GetFeatureInfo-kallet</p>
+                </StatusItem>
+                <StatusItem params={this.state.hasLegend}>
+                  <h5>Støtter tegnforklaringer</h5>
+                  <p>GetCapabilities responsen oppgir at tjenesten støtter GetLegendGraphics-kallet eller LegendURL-kallet</p>
+                </StatusItem>
+                <StatusItem params={this.state.hasACA}>
+                  <h5>Oppgir nødvendig lisensinformasjon</h5>
+                  <p>Tjenesten oppgir både Attribution og AccessConstraints</p>
+                </StatusItem>
+                <StatusItem params={this.state.gfiOnGroupError}>
+                  <h5>Støtter egenskapsspørringer på gruppelag</h5>
+                  <p>GetCapabilities responsen oppgir at tjenesten støtter GetFeatureInfo-kallet for gruppelag</p>
+                </StatusItem>
+                <StatusItem params={this.state.svgError}>
+                  <h5>Korrekt text/xml+svg decoding</h5>
+                  <p>Noen kartklienter (Adaptive) har problemer med å dekode '+'-tegnet i responser, derfor tester vi dette</p>
+                </StatusItem>
+                <StatusItem params={this.state.stylesError}>
+                  <h5>Parameteren 'style' er valgfri</h5>
+                  <p>Noen kartklienter (ESRI) er har problemer med å fortolke 'style'-parameteren, selv om den er tom</p>
+                </StatusItem>
+                <StatusItem params={this.state.bbox}>
+                  <h5>Oppgir dekningsområde</h5>
+                  <p>Tjenesten oppgir hvilket område dataene befinner seg innenfor angitt som en BoundingBox</p>
+                </StatusItem>
+                <StatusItem params={this.state.featuresVisible}>
+                  <h5>Objekter er synlige innenfor dekningsområdet</h5>
+                  <p>For sikre at det kan gis brukerstøtte for hvor objektene faktisk befinner seg. Man kan da spørre på f.eks 100x100 px og se hvor data befinner seg.</p>
+                </StatusItem>
+                <StatusItem params={this.state.numLayers}>
+                  <h5>Antall tjenestelag</h5>
+                  <p>Antall lag som er satt opp i tjenesten. Jo flere lag desto tregere kan tjenesten respondere</p>
+                </StatusItem>
+              </tbody>
+            </table>
           </div>
         </div>
-        <pre>{JSON.stringify(this.state, null, 2)}</pre>
       </div>
     );
   },

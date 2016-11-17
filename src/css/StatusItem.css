@@ -1,0 +1,11 @@
+/**
+ * StatusItem
+ */
+.statusitem h5 {
+  line-height: inherit;
+  margin: 0;
+}
+.statusitem p {
+  font-size: 85%;
+  margin: 0;
+}
