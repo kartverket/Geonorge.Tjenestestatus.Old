@@ -24,6 +24,7 @@ gulp.task('jsx:build', function () {
 
 gulp.task('vendorJs:build', function () {
   return gulp.src([
+    './bower_components/axios/dist/axios.js',
     './bower_components/react/react.js',
     './bower_components/react/react-dom.js'
   ])
