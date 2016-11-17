@@ -30,8 +30,8 @@ var NavTabs = React.createClass({
       var isActive = item.uuid == this.props.uuid ? true : false;
       var nameIsEmpty = item.name == '' ? true : false;
       return (
-        <li className={isActive ? 'active' : null} key={item.uuid} onClick={this.tabClickHandler.bind(this, item.uuid)} role="presentation">
-          <a href={item.uuid}>
+        <li className={isActive ? 'active' : null} key={item.uuid} role="presentation">
+          <a href={item.uuid} onClick={this.tabClickHandler.bind(this, item.uuid)}>
             {item.name}
             <span className={nameIsEmpty ? 'glyphicon glyphicon-hourglass' : 'glyphicon glyphicon-remove-sign'} />
           </a>
@@ -41,8 +41,10 @@ var NavTabs = React.createClass({
     return (
       <div className="navtabs">
         <ul className="nav nav-tabs">
-          <li className={this.props.uuid == '' ? 'active' : null} onClick={this.tabClickHandler.bind(this, '')} role="presentation">
-            <a href="#">Tjenester</a>
+          <li className={this.props.uuid == '' ? 'active' : null} role="presentation">
+            <a href="#" onClick={this.tabClickHandler.bind(this, '')}>
+              Tjenester
+            </a>
           </li>
           {tabItems}
         </ul>
