@@ -1,0 +1,9 @@
+/**
+ * ServiceDetail
+ */
+.servicedetail {
+  display: none;
+}
+.servicedetail.active {
+  display: block;
+}

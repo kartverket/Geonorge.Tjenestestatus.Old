@@ -1,0 +1,15 @@
+/**
+ * NavTabs
+ */
+.navtabs {
+  margin-bottom: 15px;
+}
+.navtabs .glyphicon {
+  top: 2px;
+}
+.navtabs .glyphicon-remove-sign {
+  margin-left: 5px;
+}
+.navtabs .nav-tabs > li.active > a {
+  cursor: pointer;
+}
