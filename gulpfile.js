@@ -2,24 +2,37 @@
 
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
+var cssnano = require('gulp-cssnano');
+var download = require('gulp-download-stream');
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var pug = require('gulp-pug');
+var uglify = require('gulp-uglify');
 
-gulp.task('pug:build', function () {
+var options = {};
+options.watch = process.argv.indexOf('--watch') !== -1 ? true : false;
+options.distribute = process.argv.indexOf('--dist') !== -1 ? true : false;
+options.paths = {};
+options.paths.base = options.distribute ? './dist/' : './build/';
+options.paths.css = options.paths.base + 'css/';
+options.paths.js = options.paths.base + 'js/';
+
+gulp.task('pug', function () {
   return gulp.src('./src/pug/*.pug')
   .pipe(pug({
-    pretty: true
+    pretty: options.distribute ? false : true
   }))
-  .pipe(gulp.dest('./build/'));
+  .pipe(gulp.dest(options.paths.base));
 });
 
-gulp.task('jsx:build', function () {
+gulp.task('jsx', function () {
   return gulp.src('./src/jsx/*.jsx')
   .pipe(babel({
     presets: ['react']
   }))
-  .pipe(concat('statusmonitor.js'))
-  .pipe(gulp.dest('./build/js/'));
+  .pipe(concat(options.distribute ? 'statusmonitor.min.js' : 'statusmonitor.js'))
+  .pipe(gulpif(options.distribute, uglify()))
+  .pipe(gulp.dest(options.paths.js));
 });
 
 gulp.task('vendorJs:build', function () {
@@ -32,10 +45,11 @@ gulp.task('vendorJs:build', function () {
   .pipe(gulp.dest('./build/js/'));
 });
 
-gulp.task('css:build', function () {
+gulp.task('css', function () {
   return gulp.src('./src/css/*.css')
-  .pipe(concat('statusmonitor.css'))
-  .pipe(gulp.dest('./build/css/'));
+  .pipe(concat(options.distribute ? 'statusmonitor.min.css' : 'statusmonitor.css'))
+  .pipe(gulpif(options.distribute, cssnano()))
+  .pipe(gulp.dest(options.paths.css + 'css/'));
 });
 
 gulp.task('vendorCss:build', function () {
@@ -46,8 +60,10 @@ gulp.task('vendorCss:build', function () {
   .pipe(gulp.dest('./build/css/'));
 });
 
-gulp.task('default', ['pug:build', 'vendorCss:build', 'css:build', 'vendorJs:build', 'jsx:build'], function () {
-  gulp.watch('./src/pug/**/*.pug', ['pug:build']);
-  gulp.watch('./src/css/**/*.css', ['css:build']);
-  gulp.watch('./src/jsx/**/*.jsx', ['jsx:build']);
+gulp.task('default', ['pug', 'vendorCss:build', 'css', 'vendorJs:build', 'jsx'], function () {
+  if (options.watch) {
+    gulp.watch('./src/pug/**/*.pug', ['pug']);
+    gulp.watch('./src/css/**/*.css', ['css']);
+    gulp.watch('./src/jsx/**/*.jsx', ['jsx']);
+  }
 });
