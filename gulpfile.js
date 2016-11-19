@@ -65,6 +65,14 @@ gulp.task('css', function () {
   .pipe(gulp.dest(options.paths.css + 'css/'));
 });
 
+/* Scripts */
+gulp.task('js', function () {
+  return gulp.src('./src/js/*.js')
+  .pipe(concat(options.distribute ? 'local.min.js' : 'local.js'))
+  .pipe(gulpif(options.distribute, uglify()))
+  .pipe(gulp.dest(options.paths.js));
+});
+
 /* Download vendor files */
 gulp.task('vendor:download', function () {
   var src = options.vendor.map(vendorDownload);
@@ -92,10 +100,11 @@ gulp.task('vendor:js', ['vendor:download'], function () {
 gulp.task('vendor', ['vendor:css', 'vendor:js']);
 
 /* Default */
-gulp.task('default', ['pug', 'css', 'jsx'], function () {
+gulp.task('default', ['pug', 'css', 'jsx', 'js'], function () {
   if (options.watch) {
     gulp.watch('./src/pug/**/*.pug', ['pug']);
     gulp.watch('./src/css/**/*.css', ['css']);
     gulp.watch('./src/jsx/**/*.jsx', ['jsx']);
+    gulp.watch('./src/js/**/*.js', ['js']);
   }
 });
