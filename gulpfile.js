@@ -60,9 +60,9 @@ gulp.task('jsx', function () {
 /* Stylesheets */
 gulp.task('css', function () {
   return gulp.src('./src/css/*.css')
-  .pipe(concat(options.distribute ? 'statusmonitor.min.css' : 'statusmonitor.css'))
+  .pipe(concat(options.distribute ? 'local.min.css' : 'local.css'))
   .pipe(gulpif(options.distribute, cssnano()))
-  .pipe(gulp.dest(options.paths.css + 'css/'));
+  .pipe(gulp.dest(options.paths.css));
 });
 
 /* Scripts */
