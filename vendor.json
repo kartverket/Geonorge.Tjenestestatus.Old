@@ -11,11 +11,16 @@
 },{
   "name": "react",
   "version": "15.4.0",
-  "dev": "dist/react.js",
-  "min": "dist/react.min.js"
+  "dev": "dist/react-with-addons.js",
+  "min": "dist/react-with-addons.min.js"
 },{
   "name": "react-dom",
   "version": "15.4.0",
   "dev": "dist/react-dom.js",
   "min": "dist/react-dom.min.js"
+},{
+  "name": "recharts",
+  "version": "0.18.0",
+  "dev": "umd/Recharts.js",
+  "min": "umd/Recharts.min.js"
 }]

@@ -6,11 +6,11 @@ var ServiceDetail = React.createClass({
    * componentWillReceiveProps
    */
   componentWillReceiveProps: function (props) {
-    if (props.uuid != '') {
-      var self = this;
-      this.serverRequest = axios.get('https://status.geonorge.no/testmonitorApi/serviceDetail?uuid=' + props.uuid).then(function (response) {
-        self.setState(response.data, self.tabSetName);
-      });
+    if (props.uuid != '' && props.uuid != this.props.uuid) {
+      this.setState({
+        isDetailLoading: true,
+        isResponseLoading: true
+      }, this.loadDetailData);
     }
   },
 
@@ -18,7 +18,12 @@ var ServiceDetail = React.createClass({
    * componentWillUnmount
    */
   componentWillUnmount: function() {
-    this.serverRequest.abort();
+    if (this.serverRequestDetail !== undefined) {
+      this.serverRequestDetail.abort();
+    }
+    if (this.serverRequestResponse !== undefined) {
+      this.serverRequestResponse.abort();
+    }
   },
 
   /**
@@ -36,6 +41,9 @@ var ServiceDetail = React.createClass({
    */
   getInitialState: function () {
     return {
+      chartData: [],
+      isDetailLoading: false,
+      isResponseLoading: false
     };
   },
 
@@ -58,6 +66,10 @@ var ServiceDetail = React.createClass({
           <strong>UUID:</strong>
           {' '}
           {this.props.uuid}
+          {', isDetailLoading: '}
+          {this.state.isDetailLoading ? 'yes' : 'no'}
+          {', isResponseLoading: '}
+          {this.state.isResponseLoading ? 'yes' : 'no'}
         </div>
         <div className="row">
           <div className="col-sm-4">
@@ -91,7 +103,11 @@ var ServiceDetail = React.createClass({
             </table>
           </div>
           <div className="col-sm-8">
-            Graph
+            <ResponsiveContainer height={260}>
+              <LineChart data={this.state.chartData}>
+                <Line dataKey="svartid" dot={false} type="monotone" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
         <div className="row">
@@ -167,6 +183,24 @@ var ServiceDetail = React.createClass({
         </div>
       </div>
     );
+  },
+
+  /**
+   * loadDetailData
+   */
+  loadDetailData: function () {
+    var self = this;
+    this.serverRequestDetail = axios.get('https://status.geonorge.no/testmonitorApi/serviceDetail?uuid=' + this.props.uuid).then(function (response) {
+      var newState = response.data;
+      newState.isDetailLoading = false;
+      self.setState(newState, self.tabSetName);
+    });
+    this.serverRequestResponse = axios.get('https://status.geonorge.no/monitorApi/responseList?uuid=' + this.props.uuid).then(function (response) {
+      self.setState({
+        chartData: response.data,
+        isResponseLoading: false
+      });
+    });
   },
 
   /**
