@@ -52,11 +52,15 @@ var StatusItem = React.createClass({
     switch (assessment) {
       case 'yes':
         rowClass += ' success';
-        iconClass = 'glyphicon glyphicon-exclamation-sign text-success';
+        iconClass = 'glyphicon glyphicon-ok-sign text-success';
         break;
       case 'no':
         rowClass += ' danger';
-        iconClass = 'glyphicon glyphicon-warning-sign text-danger';
+        iconClass = 'glyphicon glyphicon-remove-sign text-danger';
+        break;
+      case 'soso':
+        rowClass += ' warning';
+        iconClass = 'glyphicon glyphicon-warning-sign text-warning';
         break;
       case 'skip':
         rowClass += ' warning text-muted';
