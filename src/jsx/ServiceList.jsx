@@ -3,12 +3,16 @@
  */
 var ServiceList = React.createClass({
   /**
-   * componentDidMount
+   * componentWillReceiveProps
    */
-  componentDidMount: function () {
-    this.setState({
-      isLoading: true
-    }, this.loadListItems);
+  componentWillReceiveProps: function (props) {
+    if (props.isActive != this.props.isActive && props.isActive == true && this.state.isLoading == false) {
+      if (Date.now() > this.state.expires) {
+        this.setState({
+          isLoading: true
+        }, this.loadListItems);
+      }
+    }
   },
 
   /**
@@ -32,6 +36,7 @@ var ServiceList = React.createClass({
    */
   getInitialState: function () {
     return {
+      expires: 0,
       isLoading: false,
       listItems: []
     };
@@ -108,7 +113,9 @@ var ServiceList = React.createClass({
   loadListItems: function () {
     var self = this;
     this.serverRequest = axios.get('https://status.geonorge.no/testmonitorApi/serviceList').then(function (response) {
+      var refreshInterval = 5; //minutes
       self.setState({
+        expires: Date.now() + (refreshInterval * 60 * 1000),
         isLoading: false,
         listItems: response.data
       });
