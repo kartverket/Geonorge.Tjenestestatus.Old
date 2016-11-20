@@ -38,7 +38,9 @@ var ServiceList = React.createClass({
     return {
       expires: 0,
       isLoading: false,
-      listItems: []
+      listItems: [],
+      sortDir: 'asc',
+      sortBy: 'service'
     };
   },
 
@@ -54,7 +56,9 @@ var ServiceList = React.createClass({
    * render
    */
   render: function () {
-    var listItems = this.state.listItems.map(function (item) {
+    var listItems = this.state.listItems.filter(function (item) {
+      return true;
+    }).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
       return (
         <tr key={item.uuid}>
           <td>
@@ -84,11 +88,11 @@ var ServiceList = React.createClass({
         <table className="table">
           <thead>
             <tr>
-              <th>Navn</th>
-              <th>Eier</th>
-              <th>Status</th>
-              <th>Sist sjekket</th>
-              <th>-</th>
+              <ListItemHead id="service" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Navn</ListItemHead>
+              <ListItemHead id="eier" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Eier</ListItemHead>
+              <ListItemHead id="svartid" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Status</ListItemHead>
+              <ListItemHead id="sjekket" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Sjekket</ListItemHead>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -120,5 +124,37 @@ var ServiceList = React.createClass({
         listItems: response.data
       });
     });
+  },
+
+  /**
+   * sortHandler
+   */
+  sortHandler: function (sortBy) {
+    var newState = {};
+    if (sortBy == this.state.sortBy) {
+      newState.sortDir = this.state.sortDir == 'asc' ? 'desc' : 'asc';
+    } else {
+      newState.sortDir = 'asc';
+      newState.sortBy = sortBy;
+    }
+    this.setState(newState);
+  },
+
+  /**
+   * sortList
+   */
+  sortList: function (options, a, b) {
+    var direction = 0;
+    if (options[0] !== undefined && options[1] !== undefined) {
+      var key = options[0];
+      var value = options[1] == 'desc' ? 1 : -1;
+      if (a[key] < b[key]) {
+        direction = value;
+      }
+      if (a[key] > b[key]) {
+        direction = value * -1;
+      }
+    }
+    return direction;
   }
 });
