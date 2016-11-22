@@ -7,9 +7,7 @@ var StatusItem = React.createClass({
    */
   getDefaultProps: function () {
     return {
-      children: {},
-      description: '',
-      name: ''
+      params: {}
     };
   },
 
@@ -19,15 +17,6 @@ var StatusItem = React.createClass({
   propTypes: {
     children: React.PropTypes.node.isRequired,
     params: React.PropTypes.object
-  },
-
-  /**
-   * getDefaultProps
-   */
-  getDefaultProps: function () {
-    return {
-      params: {}
-    };
   },
 
   /**
