@@ -1,0 +1,27 @@
+/**
+ * FormGroupSearch
+ */
+.form-group-search {
+  position: relative;
+}
+.form-group-search .form-control {
+  padding-right: 36px;
+}
+.form-group-search .input-control {
+  display: block;
+  top: 0;
+  position: absolute;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  text-decoration: none;
+  z-index: 2;
+}
+.form-group-search .input-control.search {
+  right: 0;
+  width: 24px;
+}
+.form-group-search .input-control.times {
+  right: 24px;
+  width: 14px;
+}

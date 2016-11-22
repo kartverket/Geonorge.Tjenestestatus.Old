@@ -39,6 +39,7 @@ var ServiceList = React.createClass({
       expires: 0,
       isLoading: false,
       listItems: [],
+      search: '',
       sortDir: 'asc',
       sortBy: 'service'
     };
@@ -57,8 +58,21 @@ var ServiceList = React.createClass({
    */
   render: function () {
     var listItems = this.state.listItems.filter(function (item) {
-      return true;
-    }).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
+      var isRelevant = true;
+      if (this != '') {
+        var hits = 0;
+        if (item.service.toLowerCase().indexOf(this) !== -1) {
+          hits++;
+        }
+        if (item.eier.toLowerCase().indexOf(this) !== -1) {
+          hits++;
+        }
+        if (hits == 0) {
+          isRelevant = false;
+        }
+      }
+      return isRelevant;
+    }, this.state.search).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
       return (
         <tr key={item.uuid}>
           <td>
@@ -84,7 +98,26 @@ var ServiceList = React.createClass({
     }, this);
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
-        <div className="alert alert-info" style={{display: this.state.isLoading ? 'block' : 'none'}}> Laster inn </div>
+        <div className="row">
+          <div className="col-sm-3">
+            <p className="form-control-static">
+              {this.state.isLoading ? 'Laster inn' : 'Ferdig'}
+            </p>
+          </div>
+          <div className="col-sm-3">
+            <p className="form-control-static">
+              95%
+            </p>
+          </div>
+          <div className="col-sm-3">
+            <p className="form-control-static">
+              5%
+            </p>
+          </div>
+          <div className="col-sm-3">
+            <FormGroupSearch callback={this.searchHandler} value={this.state.search} />
+          </div>
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -123,6 +156,15 @@ var ServiceList = React.createClass({
         isLoading: false,
         listItems: response.data
       });
+    });
+  },
+
+  /**
+   * searchHandler
+   */
+  searchHandler: function (str) {
+    this.setState({
+      search: str
     });
   },
 
