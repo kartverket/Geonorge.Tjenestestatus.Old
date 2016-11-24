@@ -73,28 +73,7 @@ var ServiceList = React.createClass({
       }
       return isRelevant;
     }, this.state.search).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
-      return (
-        <tr key={item.uuid}>
-          <td>
-            <a href={'https://kartkatalog.geonorge.no/metadata/org/title/' + item.uuid} target="_blank">
-              {item.service}
-            </a>
-          </td>
-          <td>{item.eier}</td>
-          <td className="text-right">
-            <div className={item.status ? 'label label-success' : 'label label-danger'}>
-              {item.svartid}
-              {' sek'}
-            </div>
-          </td>
-          <td>{item.sjekket}</td>
-          <td>
-            <a href="#" onClick={this.itemClickHandler.bind(this, item.uuid)}>
-              <span className="glyphicon glyphicon-info-sign" />
-            </a>
-          </td>
-        </tr>
-      );
+      return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} uuid={item.uuid} />;
     }, this);
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
@@ -134,14 +113,6 @@ var ServiceList = React.createClass({
         </table>
       </div>
     );
-  },
-
-  /**
-   * itemClickHandler
-   */
-  itemClickHandler: function (uuid, event) {
-    event.preventDefault();
-    this.props.tabOpen(uuid);
   },
 
   /**
