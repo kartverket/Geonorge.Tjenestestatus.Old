@@ -9,18 +9,17 @@ var ListItemRow = React.createClass({
     callback: React.PropTypes.func.isRequired,
     checked: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
-    uuid: React.PropTypes.string.isRequired,
     owner: React.PropTypes.string.isRequired,
     response: React.PropTypes.number.isRequired,
-    status: React.PropTypes.bool.isRequired
+    status: React.PropTypes.bool.isRequired,
+    ts: React.PropTypes.number.isRequired,
+    uuid: React.PropTypes.string.isRequired
   },
 
   /**
    * render
    */
   render: function () {
-    var updated = new Date(this.props.checked);
-    var minutes = Math.floor((Date.now() - updated.getTime()) / 60000);
     return (
       <tr>
         <td>
@@ -38,7 +37,7 @@ var ListItemRow = React.createClass({
           </div>
         </td>
         <td>
-          <time className="small" dateTime={this.props.checked}>{minutes == 0 ? 'Nå!' : minutes + ' min siden'}</time>
+          <time className="small" dateTime={this.props.checked}>{this.props.ts.toMinutes()}</time>
         </td>
         <td>
           <a href="#" onClick={this.clickHandler}>

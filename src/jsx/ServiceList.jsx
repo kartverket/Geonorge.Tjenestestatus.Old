@@ -7,10 +7,13 @@ var ServiceList = React.createClass({
    */
   componentWillReceiveProps: function (props) {
     if (props.isActive != this.props.isActive && props.isActive == true && this.state.isLoading == false) {
-      if (Date.now() > this.state.expires) {
+      var diff = Math.floor((Date.now() - this.state.lastUpdated) / 60000);
+      if (diff > 2) {
         this.setState({
           isLoading: true
         }, this.loadListItems);
+      } else {
+        this.forceUpdate();
       }
     }
   },
@@ -36,8 +39,8 @@ var ServiceList = React.createClass({
    */
   getInitialState: function () {
     return {
-      expires: 0,
       isLoading: false,
+      lastUpdated: 0,
       listItems: [],
       search: '',
       sortDir: 'asc',
@@ -73,14 +76,15 @@ var ServiceList = React.createClass({
       }
       return isRelevant;
     }, this.state.search).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
-      return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} uuid={item.uuid} />;
+      return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />;
     }, this);
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
         <div className="row">
           <div className="col-sm-3">
             <p className="form-control-static">
-              {this.state.isLoading ? 'Laster inn' : 'Ferdig'}
+              <strong>Sist oppdatert: </strong>
+              {this.state.isLoading ? 'Laster inn...' : this.state.lastUpdated.toMinutes()}
             </p>
           </div>
           <div className="col-sm-3">
@@ -121,11 +125,16 @@ var ServiceList = React.createClass({
   loadListItems: function () {
     var self = this;
     this.serverRequest = axios.get('https://status.geonorge.no/testmonitorApi/serviceList').then(function (response) {
-      var refreshInterval = 5; //minutes
+      var items = [];
+      for (var i = 0, j = response.data.length; i < j; i++) {
+        var item = response.data[i];
+        item.ts = new Date(item.sjekket).getTime();
+        items.push(item);
+      }
       self.setState({
-        expires: Date.now() + (refreshInterval * 60 * 1000),
         isLoading: false,
-        listItems: response.data
+        lastUpdated: Date.now(),
+        listItems: items
       });
     });
   },
