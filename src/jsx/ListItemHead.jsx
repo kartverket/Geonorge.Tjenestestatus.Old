@@ -31,7 +31,7 @@ var ListItemHead = React.createClass({
       iconClass += 'glyphicon-sort';
     }
     return (
-      <th onClick={this.clickHandler}>
+      <th className="servicelist-sort" onClick={this.clickHandler}>
         {this.props.children}
         {' '}
         <span className={iconClass} />

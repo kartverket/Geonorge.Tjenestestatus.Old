@@ -7,3 +7,18 @@
 .servicelist.active {
   display: block;
 }
+.servicelist-sort {
+  border-right: 1px solid #ddd;
+  cursor: pointer;
+}
+.servicelist-sort:last-child {
+  border-right: none;
+}
+.servicelist-sort:hover {
+  background-color: #eee;
+}
+.servicelist-sort .glyphicon {
+  float: right;
+  font-size: 80%;
+  top: 4px;
+}
