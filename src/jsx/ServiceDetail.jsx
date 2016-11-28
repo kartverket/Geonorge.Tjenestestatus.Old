@@ -67,6 +67,9 @@ var ServiceDetail = React.createClass({
             <ResponsiveContainer height={300}>
               <LineChart data={this.state.chartData}>
                 <Line dataKey="svartid" dot={false} type="monotone" />
+                <XAxis dataKey="timestamp" interval={11} tick={<TickAxisX />} />
+                <YAxis tick={<TickAxisY />} />
+                <CartesianGrid strokeDasharray="3 3" />
               </LineChart>
             </ResponsiveContainer>
           </div>
