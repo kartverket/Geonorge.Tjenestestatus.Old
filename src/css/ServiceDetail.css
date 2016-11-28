@@ -7,3 +7,6 @@
 .servicedetail.active {
   display: block;
 }
+.servicedetail .row {
+  margin-bottom: 15px;
+}

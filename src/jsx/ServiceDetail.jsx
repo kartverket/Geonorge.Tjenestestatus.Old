@@ -62,48 +62,9 @@ var ServiceDetail = React.createClass({
   render: function () {
     return (
       <div className={this.props.isActive ? 'servicedetail active' : 'servicedetail'}>
-        <div className="well well-sm">
-          <strong>UUID:</strong>
-          {' '}
-          {this.props.uuid}
-          {', isDetailLoading: '}
-          {this.state.isDetailLoading ? 'yes' : 'no'}
-          {', isResponseLoading: '}
-          {this.state.isResponseLoading ? 'yes' : 'no'}
-        </div>
         <div className="row">
-          <div className="col-sm-4">
-            <table className="table">
-              <tbody>
-                <tr>
-                  <th>Navn</th>
-                  <td>{this.state.name}</td>
-                </tr>
-                <tr>
-                  <th>Eier</th>
-                  <td>{this.state.eier}</td>
-                </tr>
-                <tr>
-                  <th>Svartid</th>
-                  <td>{this.state.svartid}</td>
-                </tr>
-                <tr>
-                  <th>Sjekket</th>
-                  <td>{this.state.sjekket}</td>
-                </tr>
-                <tr>
-                  <th>Oppetid</th>
-                  <td>{this.state.uptime}</td>
-                </tr>
-                <tr>
-                  <th>Melding</th>
-                  <td>{this.state.melding}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="col-sm-8">
-            <ResponsiveContainer height={260}>
+          <div className="col-sm-12">
+            <ResponsiveContainer height={300}>
               <LineChart data={this.state.chartData}>
                 <Line dataKey="svartid" dot={false} type="monotone" />
               </LineChart>
@@ -112,6 +73,41 @@ var ServiceDetail = React.createClass({
         </div>
         <div className="row">
           <div className="col-sm-4">
+            <table className="table">
+              <colgroup>
+                <col width="30%" />
+                <col width="70%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>Navn</th>
+                  <td>{this.getState('name')}</td>
+                </tr>
+                <tr>
+                  <th>Eier</th>
+                  <td>{this.getState('eier')}</td>
+                </tr>
+                <tr>
+                  <th>Svartid</th>
+                  <td>{this.getState('svartid', '0')} sek</td>
+                </tr>
+                <tr>
+                  <th>Sjekket</th>
+                  <td>
+                    <time dateTime={this.getState('sjekket')}>{this.getState('ts', 0).toMinutes()}</time>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Oppetid</th>
+                  <td>{this.getState('uptime')}%</td>
+                </tr>
+                <tr>
+                  <th>Melding</th>
+                  <td>{this.getState('melding')}</td>
+                </tr>
+              </tbody>
+            </table>
+            <hr />
             <a className="thumbnail" href={this.state.url} target="_blank">
               <img alt="" src={this.state.url} />
             </a>
@@ -183,6 +179,17 @@ var ServiceDetail = React.createClass({
         </div>
       </div>
     );
+  },
+
+  /**
+   * getState
+   */
+  getState: function (name, fallback) {
+    if (fallback === undefined) {
+      fallback = '';
+    }
+    var value = this.state.hasOwnProperty(name) ? this.state[name] : '';
+    return value === undefined || value === null || value === '' ? fallback : value;
   },
 
   /**
