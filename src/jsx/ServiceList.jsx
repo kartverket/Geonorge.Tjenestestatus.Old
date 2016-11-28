@@ -60,7 +60,7 @@ var ServiceList = React.createClass({
    * render
    */
   render: function () {
-    var listItems = this.state.listItems.filter(function (item) {
+    var items = this.state.listItems.filter(function (item) {
       var isRelevant = true;
       if (this != '') {
         var hits = 0;
@@ -75,9 +75,23 @@ var ServiceList = React.createClass({
         }
       }
       return isRelevant;
-    }, this.state.search).sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
-      return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />;
-    }, this);
+    }, this.state.search);
+    var listItems = [];
+    if (items.length == 0) {
+      var emptyMsg = '...';
+      var emptyClass = 'active';
+      listItems.push(
+        <tr className={this.state.search == '' ? 'active' : 'danger'} key="empty">
+          <td className="text-center" colSpan="5">
+            <small>{this.state.search == '' ? 'Laster inn tjenester' : 'Søk etter "' + this.state.search + '" ga ingen treff'}</small>
+          </td>
+        </tr>
+      );
+    } else {
+      listItems = items.sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
+        return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />;
+      }, this);
+    }
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
         <div className="row">
