@@ -77,7 +77,9 @@ var ServiceList = React.createClass({
       return isRelevant;
     }, this.state.search);
     var listItems = [];
-    if (items.length == 0) {
+    var itemsFailed = 0;
+    var itemCount = items.length;
+    if (itemCount == 0) {
       var emptyMsg = '...';
       var emptyClass = 'active';
       listItems.push(
@@ -88,9 +90,14 @@ var ServiceList = React.createClass({
         </tr>
       );
     } else {
-      listItems = items.sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir])).map(function (item) {
-        return <ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />;
-      }, this);
+      items.sort(this.sortList.bind(null, [this.state.sortBy, this.state.sortDir]));
+      for (var itemIndex = 0; itemIndex < itemCount; itemIndex++) {
+        var item = items[itemIndex];
+        if (item.status == false) {
+          itemsFailed++;
+        }
+        listItems.push(<ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />);
+      }
     }
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
@@ -102,14 +109,10 @@ var ServiceList = React.createClass({
             </p>
           </div>
           <div className="col-sm-3">
-            <p className="form-control-static">
-              95%
-            </p>
+            <ProgressBar class="success" icon="ok-sign" total={itemCount} value={itemCount - itemsFailed} />
           </div>
           <div className="col-sm-3">
-            <p className="form-control-static">
-              5%
-            </p>
+            <ProgressBar class="danger" icon="exclamation-sign" total={itemCount} value={itemsFailed} />
           </div>
           <div className="col-sm-3">
             <FormGroupSearch callback={this.searchHandler} value={this.state.search} />
