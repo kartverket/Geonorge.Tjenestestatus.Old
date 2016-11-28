@@ -7,10 +7,15 @@ var ServiceDetail = React.createClass({
    */
   componentWillReceiveProps: function (props) {
     if (props.uuid != '' && props.uuid != this.props.uuid) {
-      this.setState({
-        isDetailLoading: true,
-        isResponseLoading: true
-      }, this.loadDetailData);
+      var diff = Math.floor((Date.now() - this.state.lastUpdated) / 60000);
+      if (diff > 2) {
+        this.setState({
+          isDetailLoading: true,
+          isResponseLoading: true
+        }, this.loadDetailData);
+      } else {
+        this.forceUpdate();
+      }
     }
   },
 
@@ -43,7 +48,8 @@ var ServiceDetail = React.createClass({
     return {
       chartData: [],
       isDetailLoading: false,
-      isResponseLoading: false
+      isResponseLoading: false,
+      lastUpdated: 0
     };
   },
 
@@ -202,6 +208,8 @@ var ServiceDetail = React.createClass({
     var self = this;
     this.serverRequestDetail = axios.get('https://status.geonorge.no/testmonitorApi/serviceDetail?uuid=' + this.props.uuid).then(function (response) {
       var newState = response.data;
+      newState.lastUpdated = Date.now();
+      newState.ts = new Date(newState.sjekket).getTime();
       newState.isDetailLoading = false;
       self.setState(newState, self.tabSetName);
     });
