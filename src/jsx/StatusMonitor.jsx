@@ -6,9 +6,8 @@ var StatusMonitor = React.createClass({
    * componentDidMount
    */
   componentDidMount: function () {
-    var pattern = /[\?|\&]uuid\=([a-z0-9\-]+)/;
-    var match = window.location.search.match(pattern);
-    var uuid = match === null ? '' : match[1];
+    var queryObject = this.getQueryObject();
+    var uuid = queryObject.hasOwnProperty('uuid') ? queryObject.uuid : '';
     this.tabOpen(uuid);
   },
 
@@ -40,6 +39,40 @@ var StatusMonitor = React.createClass({
   },
 
   /**
+   * getQueryObject
+   */
+  getQueryObject: function (queryString) {
+    if (queryString === undefined || queryString === null || queryString === '') {
+      var queryString = window.location.search;
+    }
+    var pairs = queryString.indexOf('?') === 0 ? decodeURIComponent(queryString).split('?').pop().split('&') : [];
+    var queryObject = {};
+    for (var i = 0, j = pairs.length; i < j; i++) {
+      var kv = pairs[i].split('=');
+      var key = kv[0].trim();
+      var val = kv[1] == undefined || kv[1] == '' ? '' : kv[1].trim();
+      if (val != '') {
+        queryObject[key] = val;
+      }
+    }
+    return queryObject;
+  },
+
+  /**
+   * getQueryString
+   */
+  getQueryString: function (queryObject) {
+    var queryString = '';
+    var keys = Object.keys(queryObject);
+    for (var i = 0, j = keys.length; i < j; i++) {
+      var key = keys[i];
+      queryString += i == 0 ? '?' : '&';
+      queryString += key + '=' + queryObject[key];
+    }
+    return queryString;
+  },
+
+  /**
    * tabClose
    */
   tabClose: function (uuid) {
@@ -48,6 +81,13 @@ var StatusMonitor = React.createClass({
     if (uuid == this.state.uuid) {
       newState.uuid = '';
       newState.view = 'list';
+
+      if (window.history && window.history.replaceState) {
+        var queryObject = this.getQueryObject();
+        delete queryObject.uuid;
+        var newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + this.getQueryString(queryObject);
+        history.pushState(queryObject, null, newUrl);
+      }
     }
 
     newState.tabs = [];
@@ -75,6 +115,19 @@ var StatusMonitor = React.createClass({
         uuid: uuid,
         name: ''
       });
+    }
+
+    if (window.history && window.history.replaceState) {
+      var queryObject = Object.assign({uuid: ''}, this.getQueryObject());
+      if (queryObject.uuid != uuid) {
+        if (uuid == '') {
+          delete queryObject.uuid;
+        } else {
+          queryObject.uuid = uuid;
+        }
+        var newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + this.getQueryString(queryObject);
+        history.pushState(queryObject, null, newUrl);
+      }
     }
 
     this.setState(newState);
