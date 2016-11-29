@@ -6,9 +6,9 @@ var ServiceDetail = React.createClass({
    * componentWillReceiveProps
    */
   componentWillReceiveProps: function (props) {
-    if (props.uuid != '' && props.uuid != this.props.uuid) {
+    if (props.uuid != '') {
       var diff = Math.floor((Date.now() - this.state.lastUpdated) / 60000);
-      if (diff > 2) {
+      if (props.uuid != this.props.uuid || diff > 2) {
         this.setState({
           isDetailLoading: true,
           isResponseLoading: true
