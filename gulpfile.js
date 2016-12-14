@@ -41,6 +41,9 @@ var vendorDownload = function (pkg) {
 gulp.task('pug', function () {
   return gulp.src('./src/pug/*.pug')
   .pipe(pug({
+    locals: {
+      extensionPrefix: options.distribute ? '.min' : ''
+    },
     pretty: options.distribute ? false : true
   }))
   .pipe(gulp.dest(options.paths.base));
