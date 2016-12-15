@@ -114,7 +114,7 @@ var ServiceList = React.createClass({
             <ProgressBar class="danger" icon="exclamation-sign" total={itemCount} value={itemsFailed} />
           </div>
           <div className="col-sm-3">
-            <FormGroupSearch callback={this.searchHandler} value={this.state.search} />
+            <FormGroupSearch callback={this.searchHandler} />
           </div>
         </div>
         <table className="table">
