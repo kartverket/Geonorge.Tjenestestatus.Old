@@ -3,26 +3,11 @@
  */
 var ServiceList = React.createClass({
   /**
-   * componentWillReceiveProps
-   */
-  componentWillReceiveProps: function (props) {
-    if (props.isActive != this.props.isActive && props.isActive == true && this.state.isLoading == false) {
-      var diff = Math.floor((Date.now() - this.state.lastUpdated) / 60000);
-      if (diff > 2) {
-        this.setState({
-          isLoading: true
-        }, this.loadListItems);
-      } else {
-        this.forceUpdate();
-      }
-    }
-  },
-
-  /**
    * componentWillUnmount
    */
   componentWillUnmount: function() {
     this.serverRequest.abort();
+    clearTimeout(this.timeoutHandler);
   },
 
   /**
@@ -60,6 +45,13 @@ var ServiceList = React.createClass({
    * render
    */
   render: function () {
+    if (this.timeoutHandler !== undefined) {
+      clearTimeout(this.timeoutHandler);
+      if (this.props.isActive == false) {
+        delete this.timeoutHandler;
+      }
+    }
+
     var items = this.state.listItems.filter(function (item) {
       var isRelevant = true;
       if (this != '') {
@@ -76,6 +68,7 @@ var ServiceList = React.createClass({
       }
       return isRelevant;
     }, this.state.search);
+
     var listItems = [];
     var itemsFailed = 0;
     var itemCount = items.length;
@@ -99,6 +92,12 @@ var ServiceList = React.createClass({
         listItems.push(<ListItemRow callback={this.props.tabOpen} checked={item.sjekket} key={item.uuid} name={item.service} owner={item.eier} response={item.svartid} status={item.status} ts={item.ts} uuid={item.uuid} />);
       }
     }
+
+    if (this.props.isActive == true && this.state.isLoading == false) {
+      var interval = this.timeoutHandler === undefined ? 0 : 10000;
+      this.timeoutHandler = setTimeout(this.statusCheck, interval);
+    }
+
     return (
       <div className={this.props.isActive ? 'servicelist active' : 'servicelist'}>
         <div className="row">
@@ -195,5 +194,16 @@ var ServiceList = React.createClass({
       }
     }
     return direction;
-  }
+  },
+
+  statusCheck: function () {
+    var timeSinceLastReload = Math.floor((Date.now() - this.state.lastUpdated) / 1000);
+    if (timeSinceLastReload > 120) {
+      this.setState({
+        isLoading: true
+      }, this.loadListItems);
+    } else {
+      this.forceUpdate();
+    }
+  },
 });
