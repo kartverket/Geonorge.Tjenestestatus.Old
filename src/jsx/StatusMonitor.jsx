@@ -9,6 +9,7 @@ var StatusMonitor = React.createClass({
     var queryObject = this.getQueryObject();
     var uuid = queryObject.hasOwnProperty('uuid') ? queryObject.uuid : '';
     this.tabOpen(uuid);
+    window.onpopstate = this.popStateHandler;
   },
 
   /**
@@ -70,6 +71,14 @@ var StatusMonitor = React.createClass({
       queryString += key + '=' + queryObject[key];
     }
     return queryString;
+  },
+
+  /**
+   * popStateHandler
+   */
+  popStateHandler: function (event) {
+    var uuid = event.state !== null && event.state.hasOwnProperty('uuid') ? event.state.uuid : '';
+    this.tabOpen(uuid);
   },
 
   /**
