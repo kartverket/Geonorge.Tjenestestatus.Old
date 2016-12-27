@@ -122,7 +122,7 @@ var ServiceList = React.createClass({
             <tr>
               <ListItemHead id="service" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Navn</ListItemHead>
               <ListItemHead id="eier" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Eier</ListItemHead>
-              <ListItemHead id="svartid" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Status</ListItemHead>
+              <ListItemHead id="status" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Status</ListItemHead>
               <ListItemHead id="sjekket" sortBy={this.state.sortBy} sortDir={this.state.sortDir} sortHandler={this.sortHandler}>Sjekket</ListItemHead>
               <th>&nbsp;</th>
             </tr>
