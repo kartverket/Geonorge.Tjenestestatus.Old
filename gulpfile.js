@@ -3,7 +3,7 @@
 /* Require packages */
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
-var cssnano = require('gulp-cssnano');
+var cssmin = require('gulp-cssmin');
 var download = require('gulp-download-stream');
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
@@ -64,7 +64,7 @@ gulp.task('jsx', function () {
 gulp.task('css', function () {
   return gulp.src('./src/css/*.css')
   .pipe(concat(options.distribute ? 'local.min.css' : 'local.css'))
-  .pipe(gulpif(options.distribute, cssnano()))
+  .pipe(gulpif(options.distribute, cssmin()))
   .pipe(gulp.dest(options.paths.css));
 });
 
