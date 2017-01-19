@@ -7,25 +7,25 @@
 },{
   "url": "https://unpkg.com/{pkg}@{ver}/{src}",
   "pkg": "axios",
-  "ver": "0.15.2",
+  "ver": "0.15.3",
   "dev": "dist/axios.js",
   "min": "dist/axios.min.js"
 },{
   "url": "https://unpkg.com/{pkg}@{ver}/{src}",
   "pkg": "react",
-  "ver": "15.4.0",
+  "ver": "15.4.2",
   "dev": "dist/react-with-addons.js",
   "min": "dist/react-with-addons.min.js"
 },{
   "url": "https://unpkg.com/{pkg}@{ver}/{src}",
   "pkg": "react-dom",
-  "ver": "15.4.0",
+  "ver": "15.4.2",
   "dev": "dist/react-dom.js",
   "min": "dist/react-dom.min.js"
 },{
   "url": "https://unpkg.com/{pkg}@{ver}/{src}",
   "pkg": "recharts",
-  "ver": "0.18.0",
+  "ver": "0.20.5",
   "dev": "umd/Recharts.js",
   "min": "umd/Recharts.min.js"
 }]
