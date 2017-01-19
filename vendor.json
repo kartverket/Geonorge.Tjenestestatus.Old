@@ -1,26 +1,31 @@
 [{
-  "name": "bootstrap",
-  "version": "3.3.7",
+  "url": "https://unpkg.com/{pkg}@{ver}/{src}",
+  "pkg": "bootstrap",
+  "ver": "3.3.7",
   "dev": "dist/css/bootstrap.css",
   "min": "dist/css/bootstrap.min.css"
 },{
-  "name": "axios",
-  "version": "0.15.2",
+  "url": "https://unpkg.com/{pkg}@{ver}/{src}",
+  "pkg": "axios",
+  "ver": "0.15.2",
   "dev": "dist/axios.js",
   "min": "dist/axios.min.js"
 },{
-  "name": "react",
-  "version": "15.4.0",
+  "url": "https://unpkg.com/{pkg}@{ver}/{src}",
+  "pkg": "react",
+  "ver": "15.4.0",
   "dev": "dist/react-with-addons.js",
   "min": "dist/react-with-addons.min.js"
 },{
-  "name": "react-dom",
-  "version": "15.4.0",
+  "url": "https://unpkg.com/{pkg}@{ver}/{src}",
+  "pkg": "react-dom",
+  "ver": "15.4.0",
   "dev": "dist/react-dom.js",
   "min": "dist/react-dom.min.js"
 },{
-  "name": "recharts",
-  "version": "0.18.0",
+  "url": "https://unpkg.com/{pkg}@{ver}/{src}",
+  "pkg": "recharts",
+  "ver": "0.18.0",
   "dev": "umd/Recharts.js",
   "min": "umd/Recharts.min.js"
 }]

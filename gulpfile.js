@@ -4,7 +4,7 @@
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
-var download = require('gulp-download-stream');
+var format = require('string-format');
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
 var pug = require('gulp-pug');
@@ -21,29 +21,21 @@ options.paths.js = options.paths.base + 'js/';
 options.vendor = require('./vendor.json');
 
 /* Functions */
-var vendorFilter = function (pkg) {
-  var key = options.distribute ? 'min' : 'dev';
-  return pkg[key].split('.').pop() == this ? true : false;
-};
-var vendorMap = function (pkg) {
-  var key = options.distribute ? 'min' : 'dev';
-  return './vendor/' + pkg[key].split('/').pop();
-};
-var vendorDownload = function (pkg) {
-  var key = options.distribute ? 'min' : 'dev';
-  return {
-    file: pkg[key].split('/').pop(),
-    url: 'https://unpkg.com/' + pkg.name + '@' + pkg.version + '/' + pkg[key]
-  };
+var vendorUrl = function (vendorFile) {
+  var tpl = vendorFile.dev !== undefined && vendorFile.min !== undefined ? vendorFile.url.replace('{src}', options.distribute ? '{min}' : '{dev}') : vendorFile.url;
+  var url = format(tpl, vendorFile);
+  var key = url.split('.').pop() == 'css' ? 'styles' : 'scripts';
+  this[key].push(url);
 };
 
 /* HTML templating */
 gulp.task('pug', function () {
+  var locals = { scripts: [], styles: [] };
+  var vendorFiles = require('./vendor.json');
+  vendorFiles.forEach(vendorUrl, locals);
   return gulp.src('./src/pug/*.pug')
   .pipe(pug({
-    locals: {
-      extensionPrefix: options.distribute ? '.min' : ''
-    },
+    locals: locals,
     pretty: options.distribute ? false : true
   }))
   .pipe(gulp.dest(options.paths.base));
@@ -55,7 +47,7 @@ gulp.task('jsx', function () {
   .pipe(babel({
     presets: ['react']
   }))
-  .pipe(concat(options.distribute ? 'statusmonitor.min.js' : 'statusmonitor.js'))
+  .pipe(concat('statusmonitor.js'))
   .pipe(gulpif(options.distribute, uglify()))
   .pipe(gulp.dest(options.paths.js));
 });
@@ -63,7 +55,7 @@ gulp.task('jsx', function () {
 /* Stylesheets */
 gulp.task('css', function () {
   return gulp.src('./src/css/*.css')
-  .pipe(concat(options.distribute ? 'local.min.css' : 'local.css'))
+  .pipe(concat('local.css'))
   .pipe(gulpif(options.distribute, cssmin()))
   .pipe(gulp.dest(options.paths.css));
 });
@@ -71,36 +63,10 @@ gulp.task('css', function () {
 /* Scripts */
 gulp.task('js', function () {
   return gulp.src('./src/js/*.js')
-  .pipe(concat(options.distribute ? 'local.min.js' : 'local.js'))
+  .pipe(concat('local.js'))
   .pipe(gulpif(options.distribute, uglify()))
   .pipe(gulp.dest(options.paths.js));
 });
-
-/* Download vendor files */
-gulp.task('vendor:download', function () {
-  var src = options.vendor.map(vendorDownload);
-  return download(src)
-  .pipe(gulp.dest('./vendor/'));
-});
-
-/* Make vendor CSS */
-gulp.task('vendor:css', ['vendor:download'], function () {
-  var src = options.vendor.filter(vendorFilter, 'css').map(vendorMap);
-  return gulp.src(src)
-  .pipe(concat(options.distribute ? 'vendor.min.css' : 'vendor.css'))
-  .pipe(gulp.dest(options.paths.css));
-});
-
-/* Make vendor JS */
-gulp.task('vendor:js', ['vendor:download'], function () {
-  var src = options.vendor.filter(vendorFilter, 'js').map(vendorMap);
-  return gulp.src(src)
-  .pipe(concat(options.distribute ? 'vendor.min.js' : 'vendor.js'))
-  .pipe(gulp.dest(options.paths.js));
-});
-
-/* Get all vendor resources */
-gulp.task('vendor', ['vendor:css', 'vendor:js']);
 
 /* Default */
 gulp.task('default', ['pug', 'css', 'jsx', 'js'], function () {
