@@ -206,7 +206,7 @@ var ServiceDetail = React.createClass({
    */
   loadDetailData: function () {
     var self = this;
-    this.serverRequestDetail = axios.get('https://status.geonorge.no/testmonitorApi/serviceDetail?uuid=' + this.props.uuid).then(function (response) {
+    this.serverRequestDetail = axios.get('https://status.geonorge.no/monitorApi/serviceDetail?uuid=' + this.props.uuid).then(function (response) {
       var newState = response.data;
       newState.lastUpdated = Date.now();
       newState.ts = new Date(newState.sjekket).getTime();

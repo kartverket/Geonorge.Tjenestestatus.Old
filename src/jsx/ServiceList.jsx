@@ -140,7 +140,7 @@ var ServiceList = React.createClass({
    */
   loadListItems: function () {
     var self = this;
-    this.serverRequest = axios.get('https://status.geonorge.no/testmonitorApi/serviceList').then(function (response) {
+    this.serverRequest = axios.get('https://status.geonorge.no/monitorApi/serviceList').then(function (response) {
       var items = [];
       for (var i = 0, j = response.data.length; i < j; i++) {
         var item = response.data[i];
